@@ -1,0 +1,39 @@
+     +------------------+             /--------------------------------------\
+     |   <<Ethernet>>   |             |ce_gw_job has ethernet as dst and CAN |
+     |struct net_device |             |as source OR has ethernet as src and  |
+     +------------------+             |CAN as dst. hlist_node annotations are|
+ +-->|       ....       |             |members of the structs where the arrow|
+ |   +------------------+             |points to. The hlist structs are not  |
+ |           |                        |directly represented here and have    |
+ |           |void *priv              |been simplyfied.                      |
+ |           |                        \--------------------------------------/
+ |           v
+ |   +---------------------+        struct hlist_head ce_gw_job_list
+ |   |struct ce_gw_job_info|                       |
+ |   +---------------------+                       |
+ |   |                     |    struct hlist_node  |
+ |   +---------------------+        list         \ |
+ |                 | | struct                     \|
+ |         struct  | |hlist_head                   |     +------------------+
+ |       hlist_head| | job_src                     |     |     <<CAN>>      |
+ |         job_dst | |                             |     |struct net_device |
+ |                 | |\                            |     +------------------+
+ |                 | | struct hlist_node           |     |       ....       |
+ |                 | |/   list_dev                 |     +------------------+
+ |                 | /                             |               ^
+ |                 |/|                             |0...*          |
+ | struct          | |       0...*                 v               | struct
+ |net_device       | +--------->+----------------------+           |net_device
+ | *dev            +----------->|  struct ce_gw_job    |           | *dev
+ |                        0...* +----------------------+           |
+ |        +-------------+       |struct rcu_head rcu   |      +-------------+
+ |        |   union     |       |u32 id                |      |   union     |
+ +--------+-------------+       |enum ce_gw_type type  |      +-------------+
+          |             |<>-----|u32 flags             |----<>|             |
+          +-------------+  dst/ |u32 handled_frames    | src/ +-------------+
+                           src  |u32 dropped_frames    | dst
+                                |union { struct can_   |
+                                |filter can_rcv_filter}|
+                                +----------------------+
+
+This is an UML class diagramm which shows the main routing management lists.

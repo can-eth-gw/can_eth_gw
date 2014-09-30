@@ -1,0 +1,36 @@
+SFF header:
+-----------
+                1   1   1
+     11 bit    bit bit bit  4 bit
+  +___________+___+___+___+______+___...
+  |           |   |   |   |      | Raw
+  |identifier |RTR|EFF|res| DLC  | Data
+  +___________+___+___+___+______+___...
+  |               |              |
+  |<------------->|<------------>|
+     Arbitration      Control
+      Field            Field
+
+EFF header:
+-----------
+                1   1                      1   1   1
+     11 bit    bit bit       18 bit       bit bit bit  4 bit
+  +___________+___+___+__________________+___+___+___+______+___...
+  |           |sub|   | extended         |   |   |   |      | Raw
+  |identifier |RTR|EFF| identifier       |RTR|res|res| DLC  | Data
+  +___________+___+___+__________________+___+___+___+______+___...
+  |                                          |              |
+  |<---------------------------------------->|<------------>|
+           Arbitration Field                   Control Field
+
+
+
+
+
+
+
+
+
+
+
+

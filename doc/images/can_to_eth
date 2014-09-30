@@ -1,0 +1,44 @@
+/*
+ * @fn struct sk_buff *ce_gw_can_to_eth(unsigned char dest, unsigned char
+ * source, __be16 type, struct sk_buff *can_buffer)
+ * @brief converts sk_buffer including can_frame into sk_buffer including
+ * ethernet_frame
+ * @param dest MAC address of destination
+ * @param source MAC address of source
+ * @param type type of layer3 message (example: ipv4 or ipv6 ...)
+ * @param can_buffer sk_buffer including a can_frame
+ */
+struct sk_buff *ce_gw_can_to_eth(unsigned char dest, unsigned char source,
+        __be16 type, struct sk_buff *can_buffer)
+{
+        struct sk_buff *eth_skb = 0;
+        struct ethhdr *ethhdr;
+        u32 *crc_ethhdr;
+        struct can_frame *can_frame_skb = (struct can_frame *) can_buffer->
+                mac_header;
+        const unsigned char *data_skb = (const unsigned char *) eth_skb->
+                mac_header;
+
+        eth_skb = dev_alloc_skb(130); /*64 byte data from CAN + 14 byte
+                ethernet header +4 byte CRC = 82 */
+
+        /*fills new_eth_hdr with data */
+        ethhdr = eth_hdr(eth_skb);
+        memcpy(ethhdr->h_dest, &dest, ETH_ALEN);
+        memcpy(ethhdr->h_source, &source, ETH_ALEN);
+        ethhdr->h_proto = type;
+
+        memcpy(eth_skb->data, can_buffer->network_header, can_frame_skb->
+                can_dlc); /* don't know if nh points to beginning of data field
+                after can header*/
+        crc_ethhdr = (u32 *) crc32_le (~0, data_skb, eth_skb->tail - eth_skb->
+                mac_header); /* don't know if eth_sk_buff_mac is the right
+                pointer */
+        memcpy(eth_skb->data, crc_ethhdr, 4);
+
+        return eth_skb;
+}
+
+
+
+

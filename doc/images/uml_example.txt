@@ -1,0 +1,39 @@
+
+
+     +------------------- -+          /----------------------------------------\
+     |   <<Ethernet>>      |          |Example for exactly one instance of a   |
+     |__struct net_device__|          |can net_device, one ethernet can_device |
+     +---------------------+          |and one gateway route job with ethernet |
+ +-->|       ....          |          |as destination and can as source device.|
+ |   +---------------------+          \----------------------------------------/
+ |           |
+ |           |void *priv
+ |           |
+ |           v
+ | +-------------------------+    __struct hlist_head ce_gw_job_list__
+ | |__struct ce_gw_job_info__|                     |
+ | +-------------------------+                     |
+ | |                         |  struct hlist_node  |
+ | +-------------------------+      list         \ |
+ |                 | | struct                     \|
+ |         struct  | |hlist_head                   |     +---------------------+
+ |       hlist_head| | job_src                     |     |     <<CAN>>         |
+ |         job_dst | |                             |     |__struct net_device__|
+ |                 | |\                            |     +---------------------+
+ |                 | | struct hlist_node           |     |       ....          |
+ |                 | |/   list_dev                 |     +---------------------+
+ |                 | /                             |                ^
+ |                 |/|                             |1               |
+ | struct          | |       0                     v                |struct
+ | net_device      | +--------->+----------------------+            |net_device
+ | *dev            +----------->|__struct ce_gw_job__  |            |*dev
+ |                            1 +----------------------+            |
+ |        +-------------+       |struct rcu_head rcu   |      +-------------+
+ |        |  __union__  |       |u32 id                |      |  __union__  |
+ +--------+-------------+       |enum ce_gw_type type  |      +-------------+
+          |             |<>-----|u32 flags             |----<>|             |
+          +-------------+  dst  |u32 handled_frames    | src  +-------------+
+                                |u32 dropped_frames    |
+                                |union { struct can_   |
+                                |filter can_rcv_filter}|
+                                +----------------------+

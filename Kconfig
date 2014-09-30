@@ -1,0 +1,13 @@
+menu "CAN - Ethernet Gateway"
+
+config CE_GW
+	tristate "Bidirectional CAN - Ethernet Gateway"
+	depends on CAN && CAN_DEV
+	default n
+	---help---
+	  A bidirectional CAN to Ethernet Gateway. You can translate the
+	  packages in several ways, like CAN Haeder to Ethernet Header or
+	  CAN Frame to Ethernet Payload or CAN Header to IP/UDP or IP/UDP
+	  Header. The Routes are between an existing linux-can (formerly
+	  SocketCAN) device and an virtual ethernet device, witch creates then
+	  Gateway.

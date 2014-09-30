@@ -1,0 +1,30 @@
+/* TODO: implement CRC for CAN ! */
+
+/**
+ * @fn struct sk_buff *ce_gw_eth_to_can(canid_t, id, struct sk_buff *eth_buff)
+ * @brief converst sk_buffer including an ethernet frame to sk_buffer
+ * including a can_frame
+ * @param id identifier of can_frame (see ce_gw_get_header for more information
+ * @param eth_buffer sk_buffer including an ethernet frame
+ * @return sk_buffer including a can frame
+ */
+struct sk_buff *ce_gw_eth_to_can(canid_t id, struct sk_buff *eth_buff)
+{
+        struct sk_buff *can_buff;
+        struct can_frame *can = 0;
+
+        can->can_id = id;
+        can->can_dlc = (__u8) eth_buff->data_len - 18;
+
+        can_buff = dev_alloc_skb(130);
+
+        memcpy(can_buff->mac_header, &can->can_id, 40);
+        can_buff->network_header = can_buff->data;
+        memcpy(can_buff->data, eth_buff->network_header, can->can_dlc);
+        can_buff->transport_header = (__u8 *) can_buff->network_header +
+                ip_hdrlen(can_buff);
+        /*crc irgendwie berechnen??? */
+
+        return 0;
+}
+

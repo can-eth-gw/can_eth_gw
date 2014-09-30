@@ -1,0 +1,31 @@
+  _______________________________________________________
+ |                                                       |
+ |       CAN Ethernet Gateway Kernel Module (ce_gw)      |
+ |_______________________________________________________|
+ |                                                       |
+ |           Ethernet Frame    +----------------------+  |  CAN Frame
+ |           +-----o---------->|CAN - Ethernet Gateway|<-+-------o----+
+ |           |                 |     ce_gw_main.c     |  |            |
+ |           |                 +----------------------+  |            v
+ |           v                                           |       +----------+
+ | +--------------------+                                |       |CAN Device|
+ | |virtual Ethernet dev|                                |       |  can.c   |
+ | |('cegw#' Interface) |         +---------------+      |       +----------+
+ | |    ce_gw_dev.c     |         |Netlink Server |      |            ^
+ | +--------------------+         |ce_gw_netlink.c|      |            |
+ |           ^                    +---------------+      |            v
+ |           |                            ^              |       +----------+
+ |___________|____________________________|______________|       |CAN Driver|
+             |                            o Netlink Frame        +----------+
+             v            Kernelspace     |                           ^
+           +----+       __________________|_____________              |
+           | OS |         Userspace       |                           v
+           +----+                         v                       +-------+
+                                 +------------------+             |CAN NIC|
+                                 |  Netlink Client  |             +-------+
+                                 |    netlink.c     |
+                                 |(can-eth-gw-utils)|
+                                 +------------------+
+
+Diagramm which shows the relation and packet transmission between
+the components of this kernel module (ce_gw) and others of the OS.
