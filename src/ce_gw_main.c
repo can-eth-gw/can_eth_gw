@@ -217,18 +217,6 @@ struct canfd_frame *ce_gw_get_header_canfd(canid_t id, __u8 len, __u8 flags,
 	return canfd;
 }
 
-void f()
-{
-    char *p;
-    *p = 0;
-}
-
-void f()
-{
-    char *p;
-    *p = 0;
-}
-
 /**
  * @brief for CE_GW_TYPE_NET: copy CAN-Frame into ethernet payload
  * @fn void ce_gw_can2net(struct sk_buff *eth_skb, struct sk_buff *can_skb,
