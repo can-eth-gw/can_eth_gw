@@ -983,9 +983,9 @@ int ce_gw_remove_route(u32 id)
 {
 	pr_info("ce_gw: unregister CAN ETH GW routes\n");
 	struct ce_gw_job *gwj = NULL;
-	struct hlist_node *n, *nx;
+	struct hlist_node *n;
 
-	hlist_for_each_entry_safe(gwj, n, nx, &ce_gw_job_list, list) {
+	hlist_for_each_entry_safe(gwj, n, &ce_gw_job_list, list) {
 		if (gwj->id != id && id)
 			continue;
 
@@ -1069,11 +1069,11 @@ static void __exit ce_gw_cleanup(void)
 static void list_jobs()
 {
 	struct ce_gw_job *gwj = NULL;
-	struct hlist_node *n, *nx;
+	struct hlist_node *n;
 
 	pr_info("Routing jobs\n"
 	        "------------\n");
-	hlist_for_each_entry_safe(gwj, n, nx, &ce_gw_job_list, list) {
+	hlist_for_each_entry_safe(gwj, n, &ce_gw_job_list, list) {
 		pr_info("ID: %i, input dev: %s, output dev: %s\n",
 		        gwj->id, gwj->src.dev->name, gwj->dst.dev->name);
 	}
@@ -1133,9 +1133,8 @@ static void test_hash_list(void)
 	hlist_add_head(&gwj3.list, &ce_gw_job_list);
 
 	struct ce_gw_job *gwj = NULL;
-	struct hlist_node *n, *nx;
 
-	hlist_for_each_entry(gwj, n, &ce_gw_job_list, list) {
+	hlist_for_each_entry(gwj, &ce_gw_job_list, list) {
 		pr_debug("cegw hashtest: List entry %i\n", gwj->dropped_frames);
 	}
 
