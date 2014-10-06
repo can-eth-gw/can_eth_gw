@@ -5,7 +5,7 @@ Requirements:
 -------------
 +	gcc (>=4.7)
 +	Kernel (>=3.6) for the necessary LinuxCan code.
-+	Kernel == 3.8. Due to tree function changes this version of can-eth-gw will only compile at this Kernel version. But it should be modifiable for other verions.
++	Kernel >=3.9 and <=3.12. Due to tree function changes this version of can-eth-gw will only compile at this Kernel version. But it should be modifiable for other verions.
 
 Installation:
 -------------
