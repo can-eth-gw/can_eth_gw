@@ -1,7 +1,9 @@
 Readme
 ======
 
-Use `cegwctl` from the utilities package to control the gateway: <https://github.com/can-eth-gw/can-eth-gw-utils>
+Use `cegwctl` from the utilities package to control the gateway: <https://github.com/can-eth-gw/cegwctl>
+
+See a [small tutorial](https://github.com/can-eth-gw/can_eth_gw/blob/master/doc/rough_tutorial.md) in the docs, if you want to try it out.
 
 References
 ==========
